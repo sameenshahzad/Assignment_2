@@ -1,2 +1,78 @@
 # Assignment_2
 VBA_Assignment_2_SSH
+
+
+Sub run()
+
+Range("J1:M91").ClearContents
+
+Dim ticker_name As String
+Dim output As Long
+
+Dim open_price As Double
+Dim close_price As Double
+
+Dim yearly_change As Double
+Dim percent_change As Double
+Dim stock_vol As Double
+
+
+
+output = 2
+
+
+'Loop through each worksheet
+
+For Each ws In Worksheets
+    Dim WorksheetName As String
+    lastrow = ws.Cells(Rows.Count, 1).End(xlUp).Row - 1
+    WorksheetName = ws.Name
+    
+
+'Output Summary Table
+Dim i As Long
+For i = 2 To lastrow
+            
+    If ws.Cells(i, 1).Value <> ws.Cells(i + 1, 1).Value Then
+        ticker_name = ws.Cells(i, 1).Value
+        'open_price = ws.Cells(i + 1, 3).Value
+        close_price = ws.Cells(i, 6).Value
+        yearly_change = close_price - open_price
+        percent_change = yearly_change / open_price
+        stock_vol = stock_vol + ws.Cells(i, 7).Value
+        
+'Print Values to Summary Table
+        ws.Cells(1, 10) = "Ticker"
+        ws.Cells(1, 11) = "Yearly Change"
+        ws.Cells(1, 12) = "Percent Change"
+        ws.Cells(1, 13) = "Stock Volume"
+        
+         ws.Range("J" & output).Value = ticker_name
+         ws.Range("K" & output).Value = yearly_change
+         ws.Range("L" & output).Value = percent_change
+         ws.Range("M" & output).Value = stock_vol
+    
+        'Reset output
+        output = output + 1
+        open_price = ws.Cells(i + 1, 3).Value
+    
+        
+ElseIf i = 2 Then
+
+        open_price = ws.Cells(i, 3).Value
+        stock_vol = stock_vol + ws.Cells(i, 7).Value
+
+Else
+
+        stock_vol = stock_vol + ws.Cells(i, 7).Value
+
+    End If
+
+
+Next i
+
+Next ws
+End Sub
+
+
+
